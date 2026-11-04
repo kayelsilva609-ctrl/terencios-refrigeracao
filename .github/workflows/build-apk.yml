@@ -43,11 +43,14 @@ jobs:
           "$SDKMANAGER" --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
 
+     
       - name: Preparar projeto
         run: |
           unzip -o terencios-github-upload.zip
           cd terencios-src/frontend
           npm install
+          npm install --no-save typescript@5.9.3
+          
 
       - name: Gerar APK
         working-directory: terencios-src/frontend
