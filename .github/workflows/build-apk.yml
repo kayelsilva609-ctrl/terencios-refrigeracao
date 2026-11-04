@@ -24,11 +24,24 @@ jobs:
           distribution: temurin
           java-version: 21
 
+      
       - name: Instalar componentes Android
+        shell: bash
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          yes | sdkmanager --licenses
-          sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)
+
+          if [ -z "$SDKMANAGER" ]; then
+            echo "Erro: sdkmanager não encontrado"
+            find "$ANDROID_HOME" -maxdepth 4 -type f -name sdkmanager
+            exit 1
+          fi
+
+          echo "SDK Manager encontrado em: $SDKMANAGER"
+
+          yes | "$SDKMANAGER" --licenses || true
+
+          "$SDKMANAGER" --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
 
       - name: Preparar projeto
         run: |
